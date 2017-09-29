@@ -1,0 +1,62 @@
+# service for TA3 cherrypy
+apiVersion: v1
+kind: Service
+metadata:
+  name: "eval-ex-1"
+  labels:
+    evalId: "eval-ex-1"
+spec:
+  type: NodePort
+  selector:
+    evalId: "eval-ex-1"
+  ports:
+    - name: http
+      port: 80
+      targetPort: 8080
+
+---
+
+# TA2/3 in same pod
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "eval-ex-1"
+  labels:
+    evalId: "eval-ex-1"
+    main: "yes"
+spec:
+  restartPolicy: Never
+
+  containers:
+    - name: ta3-main
+      image: "d3m-ta3"
+      imagePullPolicy: Never
+      ports:
+        - name: http
+          containerPort: 8080
+      env:
+        - name: EVAL_ID
+          value: "eval-ex-1"
+        - name: TA3_OUTDIR
+          value: /outdir
+      volumeMounts:
+        - name: eval-data
+          mountPath: /outdir
+          readOnly: false
+    - name: ta2-main
+      image: "d3m-ta2"
+      imagePullPolicy: Never
+      env:
+        - name: EVAL_ID
+          value: "eval-ex-1"
+        - name: TA2_OUTDIR
+          value: /outdir
+      volumeMounts:
+        - name: eval-data
+          mountPath: /outdir
+          readOnly: false
+
+  volumes:
+    - name: eval-data
+      hostPath:
+        path: "/d3m-data"

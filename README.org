@@ -1,0 +1,12 @@
+* Installation
+  Install minikube and kubectl.
+
+  Run 'minikube start' to start the VM.
+
+  eval $(minikube docker-env) to have access to the Docker daemon within minikube.
+
+  Build both the TA2 and TA3 Docker images in this environment, named d3m-ta2 and d3m-ta3 respectively.
+
+  Run kubectl -f kube.yml.
+
+  Run minikube service eval-ex-1 --url to retrieve the URL of the service.
