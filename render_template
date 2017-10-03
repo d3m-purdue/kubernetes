@@ -1,0 +1,12 @@
+#!env python2
+
+from jinja2 import Template
+import sys
+
+
+def main():
+    print Template(sys.stdin.read()).render(eval_id="EVAL_ID")
+
+
+if __name__ == '__main__':
+    sys.exit(main())
